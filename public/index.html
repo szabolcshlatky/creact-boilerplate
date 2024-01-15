@@ -1,43 +1,216 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
+
   <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+    <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow" />
+
+    <meta name="description"
+          content="150-160 characters, with (focus)keywords at the beginning" />
+    <meta name="keywords" content="focus,lessimportant,max10" />
+    <meta name="author" content="Szabolcs Hlatky" />
+    <meta name="creator" content="Coding Sable" />
+    <meta name="publisher" content="NIX" />
+    <meta name="generator" content="Visual Studio Code" />
+    <meta name="distribution" content="global" />
+    <meta name="revised" content="NIX, 2023/12/20" />
+    <meta name="revisit-after" content="366 days" />
+    <meta name="rating" content="general" />
+    <meta name="language" content="English" />
+    <meta name="coverage" content="Worldwide" />
+    <meta name="target" content="all" />
+    <meta name="audience" content="all" />
     <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+
+    <title>CReAct</title>
+
+    <link rel="icon" href="%PUBLIC_URL%/assets/favicon.ico" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/assets/favicon.ico" />
     <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
+    manifest.json provides metadata used when your web app is installed on a
+    user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+  -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
+    Notice the use of %PUBLIC_URL% in the tags above.
+    It will be replaced with the URL of the `public` folder during the build.
+    Only files inside the `public` folder can be referenced from the HTML.
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>React App</title>
+    Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+    work correctly both with client-side routing and a non-root public URL.
+    Learn how to configure a non-root public URL by running `npm run build`.
+  -->
   </head>
+
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+    <div id="root">
+
+    </div>
+
+    <div id="internal-react"></div>
+
     <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
+    This HTML file is a template.
+    If you open it directly in the browser, you will see an empty page.
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
+    You can add webfonts, meta tags, or analytics to this file.
+    The build step will place the bundled scripts into the <body> tag.
 
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
+    To begin the development, run `npm start` or `yarn start`.
+    To create a production bundle, use `npm run build` or `yarn build`.
+  -->
+
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"
+            crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"
+            crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+
+      class Square extends React.Component {
+        render() {
+          return (
+            <button className="square" onClick={this.props.onSquareClick}>
+              {this.props.value}
+            </button>
+          );
+        }
+      }
+
+      class Board extends React.Component {
+        handleClick(i) {
+          if(calculateWinner(this.props.squares)||this.props.squares[i]) {
+            return;
+          }
+          const nextSquares=this.props.squares.slice();
+          if(this.props.xIsNext) {
+            nextSquares[i]='X';
+          } else {
+            nextSquares[i]='O';
+          }
+          this.props.onPlay(nextSquares);
+        }
+
+        render() {
+          const winner=calculateWinner(this.props.squares);
+          let status;
+          if(winner) {
+            status='Winner: '+winner;
+          } else {
+            status='Next player: '+(this.props.xIsNext? 'X':'O');
+          }
+
+          return (
+            <>
+              <div className="status">{status}</div>
+              <div className="board-row">
+                <Square value={this.props.squares[0]} onSquareClick={() => this.handleClick(0)} />
+                <Square value={this.props.squares[1]} onSquareClick={() => this.handleClick(1)} />
+                <Square value={this.props.squares[2]} onSquareClick={() => this.handleClick(2)} />
+              </div>
+              <div className="board-row">
+                <Square value={this.props.squares[3]} onSquareClick={() => this.handleClick(3)} />
+                <Square value={this.props.squares[4]} onSquareClick={() => this.handleClick(4)} />
+                <Square value={this.props.squares[5]} onSquareClick={() => this.handleClick(5)} />
+              </div>
+              <div className="board-row">
+                <Square value={this.props.squares[6]} onSquareClick={() => this.handleClick(6)} />
+                <Square value={this.props.squares[7]} onSquareClick={() => this.handleClick(7)} />
+                <Square value={this.props.squares[8]} onSquareClick={() => this.handleClick(8)} />
+              </div>
+            </>
+          );
+        }
+      }
+
+      class Game extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state={
+            history: [Array(9).fill(null)],
+            currentMove: 0,
+          };
+        }
+
+        handlePlay(nextSquares) {
+          const nextHistory=[...this.state.history.slice(0, this.state.currentMove+1), nextSquares];
+          this.setState({
+            history: nextHistory,
+            currentMove: nextHistory.length-1,
+          });
+        }
+
+        jumpTo(nextMove) {
+          this.setState({
+            currentMove: nextMove,
+          });
+        }
+
+        render() {
+          const xIsNext=this.state.currentMove%2===0;
+          const currentSquares=this.state.history[this.state.currentMove];
+
+          const moves=this.state.history.map((squares, move) => {
+            let description;
+            if(move>0) {
+              description='Go to move #'+move;
+            } else {
+              description='Go to game start';
+            }
+            return (
+              <li key={move}>
+                <button onClick={() => this.jumpTo(move)}>{description}</button>
+              </li>
+            );
+          });
+
+          return (
+            <div className="game">
+              <div className="game-board">
+                <Board xIsNext={xIsNext} squares={currentSquares} onPlay={(squares) => this.handlePlay(squares)} />
+              </div>
+              <div className="game-info">
+                <ol>{moves}</ol>
+              </div>
+            </div>
+          );
+        }
+      }
+
+      function calculateWinner(squares) {
+        const lines=[
+          [0, 1, 2],
+          [3, 4, 5],
+          [6, 7, 8],
+          [0, 3, 6],
+          [1, 4, 7],
+          [2, 5, 8],
+          [0, 4, 8],
+          [2, 4, 6],
+        ];
+        for(let i=0;i<lines.length;i++) {
+          const [a, b, c]=lines[i];
+          if(squares[a]&&squares[a]===squares[b]&&squares[a]===squares[c]) {
+            return squares[a];
+          }
+        }
+        return null;
+      }
+
+      ReactDOM.render(
+        <Game />,
+        document.getElementById('internal-react')
+      );
+    </script>
+
+    <noscript> The web - browser does NOT support JavaScript or it is switched
+      off!</noscript>
   </body>
+
 </html>
